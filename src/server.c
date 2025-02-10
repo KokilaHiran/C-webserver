@@ -20,7 +20,27 @@ void handle_request(int client_socket) {
         printf("Received request: %s\n", buffer);
 
         // Simple response for demonstration
-        const char *response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<h1>Hello, World!</h1>";
+        FILE *file = fopen("src/home.html", "r");
+        if (file == NULL) {
+            const char *error_response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h1>404 Not Found</h1>";
+            send(client_socket, error_response, strlen(error_response), 0);
+            return;
+        }
+
+        // Read file contents
+        fseek(file, 0, SEEK_END);
+        long file_size = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        char *file_contents = malloc(file_size + 1);
+        fread(file_contents, 1, file_size, file);
+        file_contents[file_size] = '\0'; // Null-terminate the file contents
+        fclose(file);
+
+        // Construct response
+        char response[BUFFER_SIZE];
+        snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n%s", file_contents);
+        free(file_contents);
+
         send(client_socket, response, strlen(response), 0);
     }
 }
