@@ -7,8 +7,6 @@
 #include "../lib/http_helper.h"
 #include "../lib/file_helper.h"
 
-
-
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
@@ -19,8 +17,25 @@ void handle_request(int client_socket) {
         buffer[bytes_received] = '\0'; // Null-terminate the received data
         printf("Received request: %s\n", buffer);
 
-        // Simple response for demonstration
-        FILE *file = fopen("src/home.html", "r");
+        // Parse the request to get the requested file
+        char method[10], path[100];
+        sscanf(buffer, "%s %s", method, path);
+        
+        // Remove leading '/' from path
+        if (path[0] == '/') {
+            memmove(path, path + 1, strlen(path));
+        }
+
+        // Determine the file extension
+        const char *ext = strrchr(path, '.');
+        const char *mime_type = get_mime_type(ext ? ext + 1 : "");
+
+        // Construct the full path
+        char full_path[150];
+        snprintf(full_path, sizeof(full_path), "src/%s", path);
+
+        // Open the requested file
+        FILE *file = fopen(full_path, "rb");
         if (file == NULL) {
             const char *error_response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h1>404 Not Found</h1>";
             send(client_socket, error_response, strlen(error_response), 0);
@@ -31,21 +46,18 @@ void handle_request(int client_socket) {
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
-        char *file_contents = malloc(file_size + 1);
+        char *file_contents = malloc(file_size);
         fread(file_contents, 1, file_size, file);
-        file_contents[file_size] = '\0'; // Null-terminate the file contents
         fclose(file);
 
         // Construct response
         char response[BUFFER_SIZE];
-        snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n%s", file_contents);
-        free(file_contents);
-
+        snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Type: %s\r\nContent-Length: %ld\r\n\r\n", mime_type, file_size);
         send(client_socket, response, strlen(response), 0);
+        send(client_socket, file_contents, file_size, 0);
+        free(file_contents);
     }
 }
-
-
 
 #include <winsock2.h>
 
@@ -59,7 +71,6 @@ int main() {
 
     // Create socket
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
-
     if (server_socket < 0) {
         perror("Failed to create socket");
         return 1;
@@ -98,6 +109,5 @@ int main() {
     }
 
     close(server_socket);
-
     return 0;
 }
