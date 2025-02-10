@@ -12,12 +12,34 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
-void handle_request(int client_socket);
+void handle_request(int client_socket) {
+    char buffer[BUFFER_SIZE];
+    ssize_t bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
+    if (bytes_received > 0) {
+        buffer[bytes_received] = '\0'; // Null-terminate the received data
+        printf("Received request: %s\n", buffer);
 
+        // Simple response for demonstration
+        const char *response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<h1>Hello, World!</h1>";
+        send(client_socket, response, strlen(response), 0);
+    }
+}
+
+
+
+#include <winsock2.h>
 
 int main() {
+    // Initialize Winsock
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        perror("Failed to initialize Winsock");
+        return 1;
+    }
+
     // Create socket
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+
     if (server_socket < 0) {
         perror("Failed to create socket");
         return 1;
