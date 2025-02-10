@@ -1,4 +1,6 @@
-// utils.h
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -9,11 +11,12 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #endif
+
+void handle_request(int client_socket);
+
+#endif // UTILS_H
+
 
 #include "./lib/file_helper.h"
 #include "./lib/http_helper.h"

@@ -7,9 +7,13 @@ const char *get_mime_type(const char *file_ext)
     {
         return "text/html";
     }
-    else if (strcasecmp(file_ext, "txt") == 0)
+    else if (strcasecmp(file_ext, "css") == 0)
     {
-        return "text/plain";
+        return "text/css";
+    }
+    else if (strcasecmp(file_ext, "js") == 0)
+    {
+        return "application/javascript";
     }
     else if (strcasecmp(file_ext, "jpg") == 0 || strcasecmp(file_ext, "jpeg") == 0)
     {
@@ -19,43 +23,18 @@ const char *get_mime_type(const char *file_ext)
     {
         return "image/png";
     }
-    else if (strcasecmp(file_ext, "mp4") == 0)
+    else if (strcasecmp(file_ext, "gif") == 0)
     {
-        return "video/mp4";
+        return "image/gif";
     }
     else if (strcasecmp(file_ext, "mp3") == 0)
     {
         return "audio/mpeg";
     }
-    else
+    else if (strcasecmp(file_ext, "mp4") == 0)
     {
-        return "application/octet-stream";
+        return "video/mp4";
     }
-}
-
-char *url_decode(const char *src)
-{
-    size_t src_len = strlen(src);
-    char *decoded = malloc(src_len + 1);
-    size_t decoded_len = 0;
-
-    // decode %2x to hex
-    for (size_t i = 0; i < src_len; i++)
-    {
-        if (src[i] == '%' && i + 2 < src_len)
-        {
-            int hex_val;
-            sscanf(src + i + 1, "%2x", &hex_val);
-            decoded[decoded_len++] = hex_val;
-            i += 2;
-        }
-        else
-        {
-            decoded[decoded_len++] = src[i];
-        }
-    }
-
-    // add null terminator
-    decoded[decoded_len] = '\0';
-    return decoded;
+    // Add more MIME types as needed
+    return "application/octet-stream";
 }
