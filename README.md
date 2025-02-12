@@ -7,15 +7,14 @@ This is a simple web server implemented in C that serves static HTML files. It l
 To compile the server, ensure you have GCC installed. Run the following command in the Command Prompt:
 
 ```bash
-gcc -o server.exe server.c
-
+gcc -o server src/server.c -lws2_32
 ```
 
 ## Usage
 To run the server, execute the following command:
 
 ```bash
-./server.exe
+./server
 ```
 
 The server will start listening on port 8080. You can access the web pages by navigating to the following URLs in your web browser:
