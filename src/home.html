@@ -4,30 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Web Server</title>
+  
     <style>
         body {
-            background-image: url('./media/bg.jpg');
+            font-family: Arial, sans-serif;
+            background-image: url('bg.jpg');
             background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
         }
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: block;
-            margin: 20px auto;
+
+        h1 {
+            color: #3b3a7f;
+            padding: 10px;
+            border-radius: 5px; 
+            text-align: center;
         }
-    </style>
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            width: 25%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+            
+        }
+
+        nav ul li a {
+            color: #f0f0f0;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+
+        nav ul li a:hover {
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+</style>
 </head>
 <body>
-    <h1>Welcome to My Web Server</h1>
-    <img src="./media/profile.jpg" alt="Profile Image" class="profile-image">
-    <p>This server serves static HTML files and listens for incoming HTTP requests.</p>
-    <p>You can access the following pages:</p>
-    <ul>
-        <li><a href="./content.html">Contents Page</a></li>
-        <li><a href="./features.html">Features Page</a></li>
-    </ul>
-</body>
+    <!-- <h1>Home </h1>
+    <p>This server serves static HTML files and listens for incoming HTTP requests.</p> -->
+    <h1>Welcome To My Webserver👋</h1>
+
+    <nav>
+        <ul>
+            <li><a href="./home.html">Home </a></li>
+            <li><a href="./contents.html">Contents </a></li>
+            <li><a href="./features.html">Features </a></li>
+        </ul>
+    </nav>
+    <img src="profile.jpg" class="profile-image" alt="Profile Image">
+
+    
 </html>
