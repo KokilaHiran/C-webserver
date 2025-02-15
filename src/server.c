@@ -9,8 +9,44 @@
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
+#define DEFAULT_PAGE "src/home.html"
+#define CACHE_SIZE 10
+
+// Structure for caching frequently accessed files
+typedef struct {
+    char *path;
+    char *content;
+    long size;
+} FileCache;
+
+FileCache cache[CACHE_SIZE];
+int cache_count = 0;
+
+// Function to serve default page
+void serve_default_page(int client_socket) {
+    FILE *file = fopen(DEFAULT_PAGE, "rb");
+    if (file == NULL) {
+        const char *error_response = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html\r\n\r\n<h1>500 Internal Server Error</h1>";
+        send(client_socket, error_response, strlen(error_response), 0);
+        return;
+    }
+    
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *file_contents = malloc(file_size);
+    fread(file_contents, 1, file_size, file);
+    fclose(file);
+    
+    char response[BUFFER_SIZE];
+    snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: %ld\r\n\r\n", file_size);
+    send(client_socket, response, strlen(response), 0);
+    send(client_socket, file_contents, file_size, 0);
+    free(file_contents);
+}
 
 void handle_request(int client_socket) {
+
     char buffer[BUFFER_SIZE];
     ssize_t bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
     if (bytes_received > 0) {
@@ -21,6 +57,12 @@ void handle_request(int client_socket) {
         char method[10], path[100];
         sscanf(buffer, "%s %s", method, path);
         
+        // Handle root path request
+        if (strcmp(path, "/") == 0) {
+            serve_default_page(client_socket);
+            return;
+        }
+
         // Remove leading '/' from path
         if (path[0] == '/') {
             memmove(path, path + 1, strlen(path));
@@ -29,10 +71,27 @@ void handle_request(int client_socket) {
         // Determine the file extension
         const char *ext = strrchr(path, '.');
         const char *mime_type = get_mime_type(ext ? ext + 1 : "");
+        if (mime_type == NULL) {
+            const char *error_response = "HTTP/1.1 415 Unsupported Media Type\r\nContent-Type: text/html\r\n\r\n<h1>415 Unsupported Media Type</h1>";
+            send(client_socket, error_response, strlen(error_response), 0);
+            return;
+        }
+
 
         // Construct the full path
         char full_path[150];
         snprintf(full_path, sizeof(full_path), "src/%s", path);
+
+        // Check cache first
+        for (int i = 0; i < cache_count; i++) {
+            if (strcmp(cache[i].path, full_path) == 0) {
+                char response[BUFFER_SIZE];
+                snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Type: %s\r\nContent-Length: %ld\r\n\r\n", mime_type, cache[i].size);
+                send(client_socket, response, strlen(response), 0);
+                send(client_socket, cache[i].content, cache[i].size, 0);
+                return;
+            }
+        }
 
         // Open the requested file
         FILE *file = fopen(full_path, "rb");
@@ -42,6 +101,7 @@ void handle_request(int client_socket) {
             return;
         }
 
+
         // Read file contents
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
@@ -49,6 +109,16 @@ void handle_request(int client_socket) {
         char *file_contents = malloc(file_size);
         fread(file_contents, 1, file_size, file);
         fclose(file);
+
+        // Add to cache if there's space
+        if (cache_count < CACHE_SIZE) {
+            cache[cache_count].path = strdup(full_path);
+            cache[cache_count].content = malloc(file_size);
+            memcpy(cache[cache_count].content, file_contents, file_size);
+            cache[cache_count].size = file_size;
+            cache_count++;
+        }
+
 
         // Construct response
         char response[BUFFER_SIZE];
