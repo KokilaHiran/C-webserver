@@ -22,7 +22,8 @@
             background-color: #333;
             padding: 10px;
             border-radius: 5px;
-            width: 25%;
+            max-width: 300px;
+            width: 90%;
             margin: 0 auto;
             display: flex;
             justify-content: space-evenly;
@@ -36,7 +37,6 @@
         nav ul li {
             display: inline;
             margin-right: 10px;
-            
         }
 
         nav ul li a {
@@ -50,17 +50,14 @@
         }
 
         .container {
-            width: 50%;
+            max-width: 800px;
+            width: 90%;
             margin: 10px auto;
-            background-color: rgba(256, 256, 256, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 5px;
         }
-
-
-        
     </style>
-
 </head>
 <body>
     <h1>Contents Page</h1>
@@ -74,24 +71,35 @@
         </ul>
     </nav>
 
-    <div class="container">
-        <h2>Text</h2>
-        <p>Hello World</p>
-
-        <h2>Image</h2>
-        <img src="image.jpg" alt="Sample Image" width="300" height="200">
-
-        <h2>Audio</h2>
-        <audio controls>
-            <source src="audio.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-
-        <h2>Video</h2>
-        <video width="320" height="240" controls>
-            <source src="video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+    <div class="container" style="display: flex; flex-direction: column; align-items: center;"> 
+        <ol>
+            <li>
+                <h2>Text</h2>
+                <p>Hello World</p>
+            </li>
+            <li>
+                <h2>Image</h2>
+                <img src="image.jpg" alt="Image">
+            </li>
+            <li>
+                <h2>Audio</h2>
+                <audio controls>
+                    <source src="audio.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+            <li>
+                <h2>Video</h2>
+                <video width="320" height="240" controls>
+                    <source src="video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </li>
+            <li>
+                <h2>Link</h2>
+                <a href="https://www.google.com" target="_blank">Google</a>
+            </li>       
+        </ol>
     </div>
 </body>
 </html>
