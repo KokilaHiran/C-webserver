@@ -49,10 +49,6 @@ The server will start listening on port 8080. You can access the web pages by na
 - `http://localhost:8080/` (home.html)
 - `http://localhost:8080/contents.html` (contents.html)
 - `http://localhost:8080/features.html` (features.html)
-- `http://localhost:8080/profile.jpg` (profile image)
-- `http://localhost:8080/audio.mp3` (audio file)
-- `http://localhost:8080/video.mp4` (video file)
-
 
 ## License
 This project is licensed under the MIT License.
