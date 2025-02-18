@@ -1,87 +1,112 @@
 #include <stdio.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include <stdlib.h>
 #include <string.h>
+#include <winsock2.h>
 #include "include/http_utils.h"
-
-#pragma comment(lib, "ws2_32.lib")
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
 #define MAX_PATH_LENGTH 2048
 
-int main() {
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        printf("WSAStartup failed\n");
-        return 1;
+// Function to initialize Winsock
+void initialize_winsock() {
+    WSADATA wsa;
+    printf("\nInitializing Winsock...");
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+        printf("Failed. Error Code: %d", WSAGetLastError());
+        exit(EXIT_FAILURE);
     }
+    printf("Initialized.\n");
+}
 
-    // Create socket
-    SOCKET server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_socket == INVALID_SOCKET) {
-        printf("Socket creation failed\n");
-        WSACleanup();
-        return 1;
+// Function to create a socket
+SOCKET create_socket() {
+    SOCKET s;
+    if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+        printf("Could not create socket: %d", WSAGetLastError());
+        exit(EXIT_FAILURE);
     }
+    printf("Socket created.\n");
+    return s;
+}
 
-    // Setup server address structure
-    struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(PORT);
+// Function to bind the socket to a port
+void bind_socket(SOCKET s, struct sockaddr_in *server) {
+    server->sin_family = AF_INET;
+    server->sin_addr.s_addr = INADDR_ANY;
+    server->sin_port = htons(PORT);
 
-    // Bind socket
-    if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
-        printf("Bind failed\n");
-        closesocket(server_socket);
-        WSACleanup();
-        return 1;
+    if (bind(s, (struct sockaddr *)server, sizeof(*server)) == SOCKET_ERROR) {
+        printf("Bind failed with error code: %d", WSAGetLastError());
+        exit(EXIT_FAILURE);
     }
+    printf("Bind done.\n");
+}
 
-    // Listen for connections
-    if (listen(server_socket, SOMAXCONN) == SOCKET_ERROR) {
-        printf("Listen failed\n");
-        closesocket(server_socket);
-        WSACleanup();
-        return 1;
-    }
+// Function to listen for incoming connections
+void listen_for_connections(SOCKET s) {
+    listen(s, SOMAXCONN);
+    printf("Waiting for incoming connections...\n");
+}
 
-    printf("Server started on port %d\n", PORT);
+// Function to handle client connections
+void handle_client(SOCKET client_socket) {
+    char buffer[BUFFER_SIZE];
+    int bytes_received = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
+    if (bytes_received > 0) {
+        buffer[bytes_received] = '\0';
 
-    while (1) {
-        SOCKET client_socket = accept(server_socket, NULL, NULL);
-        if (client_socket == INVALID_SOCKET) {
-            printf("Accept failed\n");
-            continue;
+        // Parse HTTP request to get requested file
+        char method[32], path[MAX_PATH_LENGTH], protocol[32];
+        sscanf(buffer, "%s %s %s", method, path, protocol);
+
+        // Remove leading slash and convert to local path
+        char filepath[MAX_PATH_LENGTH] = "src";
+        if (strcmp(path, "/") == 0) {
+            strcat(filepath, "/home.html");
+        } else {
+            strcat(filepath, path);
         }
 
-        // Receive request
-        char buffer[BUFFER_SIZE];
-        int bytes_received = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
-        if (bytes_received > 0) {
-            buffer[bytes_received] = '\0';
-
-            // Parse HTTP request to get requested file
-            char method[32], path[MAX_PATH_LENGTH], protocol[32];
-            sscanf(buffer, "%s %s %s", method, path, protocol);
-
-            // Remove leading slash and convert to local path
-            char filepath[MAX_PATH_LENGTH] = "src";
-            if (strcmp(path, "/") == 0) {
-                strcat(filepath, "/home.html");
-            } else {
-                strcat(filepath, path);
-            }
-
-            // Send requested file
-            send_file(client_socket, filepath);
-        }
-
-        closesocket(client_socket);
+        // Send requested file
+        send_file(client_socket, filepath);
     }
 
-    closesocket(server_socket);
+    closesocket(client_socket);
+}
+
+int main(int argc, char *argv[]) {
+    SOCKET s, new_socket;
+    struct sockaddr_in server, client;
+    int c;
+
+    // Initialize Winsock
+    initialize_winsock();
+
+    // Create a socket
+    s = create_socket();
+
+    // Bind the socket
+    bind_socket(s, &server);
+
+    // Listen for incoming connections
+    listen_for_connections(s);
+
+    // Accept and handle incoming connections
+    c = sizeof(struct sockaddr_in);
+    while ((new_socket = accept(s, (struct sockaddr *)&client, &c)) != INVALID_SOCKET) {
+        printf("Connection accepted.\n");
+        handle_client(new_socket);
+    }
+
+    if (new_socket == INVALID_SOCKET) {
+        printf("accept failed with error code: %d", WSAGetLastError());
+        return 1;
+    }
+
+    // Cleanup Winsock
+    closesocket(s);
     WSACleanup();
+
     return 0;
 }
