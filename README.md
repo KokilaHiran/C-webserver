@@ -46,9 +46,9 @@ To run the server, execute the following command:
 
 The server will start listening on port 8080. You can access the web pages by navigating to the following URLs in your web browser:
 
-- `http://localhost:8080/` (home.html)
-- `http://localhost:8080/contents.html` (contents.html)
-- `http://localhost:8080/features.html` (features.html)
+- `http://localhost:8080/home.html` (home)
+- `http://localhost:8080/contents.html` (contents)
+- `http://localhost:8080/about.html` (about)
 
 ## License
 This project is licensed under the MIT License.

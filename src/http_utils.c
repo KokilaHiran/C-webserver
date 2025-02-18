@@ -1,8 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../include/http_utils.h"
 #include "../include/mime_types.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 // Define buffer size for HTTP headers
 #define BUFFER_SIZE 1024
@@ -10,62 +10,50 @@
 void send_response(SOCKET client_socket, const char* status_code, 
                   const char* content_type, const char* content, 
                   long content_length) {
-    // Buffer for storing HTTP headers
-    char header[BUFFER_SIZE];
-    
-    // Format HTTP response headers
-    // Note: Using multiple string literals for better readability
+    // Prepare HTTP response header
+    char header[1024];
     sprintf(header, 
-        "HTTP/1.1 %s\r\n"
-        "Content-Type: %s\r\n"
-        "Content-Length: %ld\r\n"
-        "Connection: close\r\n"
-        "\r\n",
-        status_code, content_type, content_length);
-    
-    // Send headers and content separately
-    // TODO: Add error handling for send() calls
+            "HTTP/1.1 %s\r\n"
+            "Content-Type: %s\r\n"
+            "Content-Length: %ld\r\n"
+            "Connection: close\r\n"
+            "\r\n",
+            status_code, content_type, content_length);
+
+    // Send header
     send(client_socket, header, strlen(header), 0);
+    
+    // Send content
     send(client_socket, content, content_length, 0);
 }
 
 void send_file(SOCKET client_socket, const char* filepath) {
-    // Try to open the file in binary mode
     FILE* file = fopen(filepath, "rb");
-    if (file == NULL) {
-        // Handle file not found error
-        const char* error_content = "<h1>404 Not Found</h1>";
+    if (!file) {
+        // File not found - send 404 response
+        const char* error_msg = "<h1>404 Not Found</h1>";
         send_response(client_socket, "404 Not Found", "text/html", 
-                     error_content, strlen(error_content));
+                     error_msg, strlen(error_msg));
         return;
     }
 
-    // Get file size using seek operations
+    // Get file size
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    // Allocate memory for file content
+    // Read file content
     char* content = malloc(file_size);
-    if (content == NULL) {
-        // Handle memory allocation failure
-        fclose(file);
-        const char* error_content = "<h1>500 Internal Server Error</h1>";
-        send_response(client_socket, "500 Internal Server Error", 
-                     "text/html", error_content, strlen(error_content));
-        return;
-    }
-
-    // Read entire file into memory
-    // TODO: Add error handling for fread
     fread(content, 1, file_size, file);
     fclose(file);
 
-    // Send file with appropriate MIME type
-    send_response(client_socket, "200 OK", get_mime_type(filepath), 
-                 content, file_size);
+    // Get MIME type based on file extension
+    const char* mime_type = get_mime_type(filepath);
     
-    // Clean up allocated memory
+    // Send response
+    send_response(client_socket, "200 OK", mime_type, content, file_size);
+    
+    // Clean up
     free(content);
 }
 
