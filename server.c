@@ -67,9 +67,9 @@ int main() {
             sscanf(buffer, "%s %s %s", method, path, protocol);
 
             // Remove leading slash and convert to local path
-            char filepath[MAX_PATH_LENGTH] = "wwwroot";
+            char filepath[MAX_PATH_LENGTH] = "src";
             if (strcmp(path, "/") == 0) {
-                strcat(filepath, "/index.html");
+                strcat(filepath, "/home.html");
             } else {
                 strcat(filepath, path);
             }

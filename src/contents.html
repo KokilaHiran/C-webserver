@@ -8,6 +8,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-image: url('background.jpg');
+            background-size: cover;
         }
 
         h1 {
@@ -69,11 +71,13 @@
             list-style-type: none;
             padding: 0;
         }
+
+        .container ol p {
+            color: rgb(255, 0, 0);
+        }
     </style>
 </head>
 <body>
-    <!-- <h1>Home </h1>
-    <p>This server serves static HTML files and listens for incoming HTTP requests.</p> -->
     <h1>Welcome To My Webserver👋</h1>
 
     <nav>
@@ -85,29 +89,13 @@
 
     </nav>
 
-    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="container">
         <h2>Contents</h2>
-        
+
         <ol>
             <li>
                 <h2>Text</h2>
                 <p>Hello World</p>
-            </li>
-
-            <li>
-                <h2>Video</h2>
-                <video width="320" height="240" controls>
-                    <source src="video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </li>
-
-            <li>
-                <h2>Audio</h2>
-                <audio controls>
-                    <source src="audio.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
             </li>
 
             <li>
@@ -116,14 +104,21 @@
             </li>
 
             <li>
-                <h2>Pdf</h2>
-                <embed src="doc.pdf" width="800px" height="2100px">
-            </li>            
+                <h2>Video</h2>
+                <video width="320" height="240" controls>
+                    <source src="video.mp4" type="video/mp4">
+                </video>
+            </li>
 
             <li>
-                <h2>Link</h2>
-                <a href="https://www.google.com" target="_blank">Google</a>
-            </li>       
+                <h2>Audio</h2>
+                <audio controls>
+                    <source src="audio.mp3" type="audio/mpeg">
+                </audio>
+            </li>
+
+
+   
         </ol>
     </div>
 </body>

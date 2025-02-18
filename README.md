@@ -34,8 +34,7 @@ The server has been developed to meet the following evaluation criteria:
 To compile the server, ensure you have GCC installed. Run the following command in the Command Prompt:
 
 ```bash
-gcc -o server src/server.c -lws2_32
-```
+gcc -Wall -I./include -o server.exe server.c src/mime_types.c src/http_utils.c -lws2_32
 
 ## Usage
 To run the server, execute the following command:
