@@ -8,8 +8,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('bg.jpg');
-            background-size: cover;
         }
 
         h1 {
@@ -20,10 +18,10 @@
         }
 
         nav {
-            background-color: #333;
             padding: 10px;
             border-radius: 5px;
-            width: 25%;
+            max-width: 300px;
+            width: 90%;
             margin: 0 auto;
             display: flex;
             justify-content: space-evenly;
@@ -40,13 +38,13 @@
         }
 
         nav ul li a {
-            color: #f0f0f0;
+            color: #000000;
             text-decoration: none;
             padding: 5px 10px;
         }
 
         nav ul li a:hover {
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid #000;
         }
 
         .profile-image {
@@ -56,22 +54,21 @@
             width: 200px;
             height: 200px;
             margin-top: 20px;
-        }
+        }   
 
         .container {
             max-width: 600px;
             width: 90%;
             margin: 20px auto;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
+            padding: 30px;
             border-radius: 5px;
         }
 
-        .container ol {
+        .container ul {
             list-style-type: none;
             padding: 0;
         }
-        
     </style>
 </head>
 <body>
@@ -82,13 +79,15 @@
     <nav>
         <ul>
             <li><a href="./home.html">Home </a></li>
-            <li><a href="./features.html">Features </a></li>
+            <li><a href="./contents.html">Contents </a></li>
+            <li><a href="./about.html">About </a></li>
         </ul>
 
     </nav>
-    <img src="profile.jpg" class="profile-image" alt="Profile Image">
 
     <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+        <h2>Contents</h2>
+        
         <ol>
             <li>
                 <h2>Text</h2>
