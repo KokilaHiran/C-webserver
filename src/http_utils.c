@@ -78,16 +78,22 @@ void send_file_chunked(SOCKET client_socket, const char* filepath) {
     size_t bytes_read;
     
     // Send headers with Transfer-Encoding: chunked
-    const char* headers = 
+    char headers[1024];
+    snprintf(headers, sizeof(headers),
         "HTTP/1.1 200 OK\r\n"
         "Transfer-Encoding: chunked\r\n"
         "Content-Type: %s\r\n"
-        "\r\n";
+        "\r\n",
+        get_mime_type(filepath));
+    send(client_socket, headers, strlen(headers), 0);
+    
+
     
     while ((bytes_read = fread(buffer, 1, sizeof(buffer), file)) > 0) {
         // Send chunk size in hex
         char chunk_header[32];
-        sprintf(chunk_header, "%zx\r\n", bytes_read);
+        sprintf(chunk_header, "%zu\r\n", bytes_read);
+
         send(client_socket, chunk_header, strlen(chunk_header), 0);
         
         // Send chunk data
