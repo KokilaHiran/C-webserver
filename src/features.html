@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Server</title>
+    <title>My Webserver</title>
+  
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,8 +23,7 @@
             background-color: #333;
             padding: 10px;
             border-radius: 5px;
-            max-width: 300px;
-            width: 90%;
+            width: 25%;
             margin: 0 auto;
             display: flex;
             justify-content: space-evenly;
@@ -49,14 +49,14 @@
             border-bottom: 2px solid #f0f0f0;
         }
 
-        /* .profile-image {
+        .profile-image {
             display: block;
             margin: 0 auto;
             border-radius: 50%;
             width: 200px;
             height: 200px;
             margin-top: 20px;
-        }    */
+        }
 
         .container {
             max-width: 600px;
@@ -66,31 +66,66 @@
             padding: 20px;
             border-radius: 5px;
         }
+
+        .container ol {
+            list-style-type: none;
+            padding: 0;
+        }
+        
     </style>
 </head>
 <body>
+    <!-- <h1>Home </h1>
+    <p>This server serves static HTML files and listens for incoming HTTP requests.</p> -->
     <h1>Welcome To My Webserver👋</h1>
-    <img src="profile.jpg" alt="Profile Image" class="profile-image">
-    <!-- <p>This server serves static HTML files and listens for incoming HTTP requests.</p>
-    <p>Yo6 can access the following pages:</p> -->
+
     <nav>
         <ul>
             <li><a href="./home.html">Home </a></li>
-            <li><a href="./contents.html">Contents </a></li>
             <li><a href="./features.html">Features </a></li>
         </ul>
-    </nav>
 
-    <div class="container">
-        <h2>Features</h2>
-        <p>This server has the following features:</p>
-        <ul>
-            <li>Web server is running and gives the same page for all the client requests</li>
-            <li>Web server provides different (and correct) files for different client requests</li>
-            <li>Error Handling</li>
-            <li>Handling Multiple File Types</li>
-            <li>Optimisations</li>
-        </ul>
-        </ul>
-    </div>  
+    </nav>
+    <img src="profile.jpg" class="profile-image" alt="Profile Image">
+
+    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+        <ol>
+            <li>
+                <h2>Text</h2>
+                <p>Hello World</p>
+            </li>
+
+            <li>
+                <h2>Video</h2>
+                <video width="320" height="240" controls>
+                    <source src="video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </li>
+
+            <li>
+                <h2>Audio</h2>
+                <audio controls>
+                    <source src="audio.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+
+            <li>
+                <h2>Image</h2>
+                <img src="images.jpeg" alt="Image">
+            </li>
+
+            <li>
+                <h2>Pdf</h2>
+                <embed src="doc.pdf" width="800px" height="2100px">
+            </li>            
+
+            <li>
+                <h2>Link</h2>
+                <a href="https://www.google.com" target="_blank">Google</a>
+            </li>       
+        </ol>
+    </div>
+</body>
 </html>

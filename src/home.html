@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Server</title>
-  
+    <title>My Webserver</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('bg.jpg');
+            background-image: url('background.jpg');
             background-size: cover;
         }
 
@@ -20,10 +19,10 @@
         }
 
         nav {
-            background-color: #333;
             padding: 10px;
             border-radius: 5px;
-            width: 25%;
+            max-width: 300px;
+            width: 90%;
             margin: 0 auto;
             display: flex;
             justify-content: space-evenly;
@@ -37,43 +36,64 @@
         nav ul li {
             display: inline;
             margin-right: 10px;
-            
         }
 
         nav ul li a {
-            color: #f0f0f0;
+            color: #00000;
             text-decoration: none;
             padding: 5px 10px;
         }
 
         nav ul li a:hover {
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid #000;
         }
 
-        .profile-image {
+        /* .profile-image {
             display: block;
             margin: 0 auto;
             border-radius: 50%;
             width: 200px;
             height: 200px;
             margin-top: 20px;
+        }    */
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 5px;
         }
-        
+
+        .container ul {
+            list-style-type: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
-    <!-- <h1>Home </h1>
-    <p>This server serves static HTML files and listens for incoming HTTP requests.</p> -->
     <h1>Welcome To My Webserver👋</h1>
-
+    <img src="profile.jpg" alt="Profile Image" class="profile-image">
+    <!-- <p>This server serves static HTML files and listens for incoming HTTP requests.</p>
+    <p>Yo6 can access the following pages:</p> -->
     <nav>
         <ul>
             <li><a href="./home.html">Home </a></li>
-            <li><a href="./contents.html">Contents </a></li>
             <li><a href="./features.html">Features </a></li>
         </ul>
     </nav>
-    <img src="profile.jpg" class="profile-image" alt="Profile Image">
 
-    
+    <div class="container">
+        <h2>Features</h2>
+        <p>This server has the following features:</p>
+        <ul>
+            <li>🌐 Web server is running and gives the same page for all the client requests</li>
+            <li>📂 Web server provides different (and correct) files for different client requests</li>
+            <li>⚠️ Error Handling</li>
+            <li>📄 Handling Multiple File Types</li>
+            <li>🚀 Optimisations</li>
+        </ul>
+        </ul>
+    </div>  
 </html>
