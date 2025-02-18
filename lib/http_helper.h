@@ -35,6 +35,11 @@ const char *get_mime_type(const char *file_ext)
     {
         return "video/mp4";
     }
+    else if (strcasecmp(file_ext, "pdf") == 0)
+    {
+        return "application/pdf";
+    }
     // Add more MIME types as needed
     return "application/octet-stream";
+
 }
